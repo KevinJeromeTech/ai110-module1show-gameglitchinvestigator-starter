@@ -24,6 +24,9 @@ When I first ran the game, it looked normal: a Streamlit page with a guess box, 
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 - Give one example of an AI suggestion you did not accept as written (including what the AI suggested, why you rejected or changed it, and how you verified your version). It does not have to be a suggestion that was wrong: over-engineered, out of scope, harder to read, or a poor fit for this codebase all count.
 
+I used Claude Code inside VS Code to do the refactor, and Claude in chat to trace bugs back to specific lines and review changes. One correct suggestion: Claude Code moved `get_range_for_difficulty`, `parse_guess`, `check_guess`, and `update_score` from `app.py` into `logic_utils.py`, swapped the hint messages so "Too High" says "Go LOWER", and removed the code that turned the secret into a string on even attempts. I verified it with pytest (`test_guess_too_high_says_go_lower` and `test_three_digit_guess_vs_two_digit_secret`) and by replaying the game with a secret of 40 and guesses above it, which now said LOWER every time. One suggestion I didn't accept as written: Claude Code moved `parse_guess` over unchanged, so out-of-range guesses like 110 were still accepted and decimals like 4.9 were silently cut down to 4. I changed it to take the difficulty's range and reject both cases with a clear error message, and I confirmed it with `test_parse_rejects_out_of_range` and by typing 110 into the live game. I also caught Claude's chat miscounting expected results twice (how many lines git should report and how many matches grep should find), which reminded me to check the actual output instead of trusting the prediction.
+
+
 ---
 
 ## 3. Debugging and testing your fixes
@@ -33,7 +36,7 @@ When I first ran the game, it looked normal: a Streamlit page with a guess box, 
   and what it showed you about your code.
 - Did AI help you design or understand any tests? How?
 
----
+---I treated a bug as fixed only when both a pytest case and the live game agreed. The most useful test was `test_three_digit_guess_vs_two_digit_secret`, which checks that 120 against a secret of 40 returns "Too High"; it targets the string-comparison bug, where "120" sorted before "40" as text. For New Game, I lost a game on purpose, clicked New Game, and confirmed the game restarted with a fresh secret, zero attempts, and an empty history. The starter test file also couldn't run at first because plain `pytest` couldn't find `logic_utils`, and every function was a stub; running `python -m pytest` fixed the path issue. AI helped me design tests by turning each row of my bug log into a specific input and expected output, so each test maps directly to a bug I actually saw.
 
 ## 4. What did you learn about Streamlit and state?
 

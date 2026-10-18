@@ -34,6 +34,7 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+    # FIXME: the hint messages are swapped. Too High mentions that it should go higher. 
         if guess > secret:
             return "Too High", "📈 Go HIGHER!"
         else:
@@ -131,6 +132,7 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: The new game button doesn't really reset the game properly. It should've reset the attempts, secrets, and score. so st.stop() blocks the actual game.  
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
@@ -143,7 +145,7 @@ if st.session_state.status != "playing":
     else:
         st.error("Game over. Start a new game to try again.")
     st.stop()
-
+# FIXME: secrets becomes a string on the even attempts, causing the issue of text comparison. 
 if submit:
     st.session_state.attempts += 1
 

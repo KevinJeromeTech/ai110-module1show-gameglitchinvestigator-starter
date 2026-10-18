@@ -3,6 +3,7 @@
 Answer each question in 3 to 5 sentences. Be specific and honest about what actually happened while you worked. This is about your process, not trying to sound perfect.
 
 ## 1. What was broken when you started?
+When I first ran the game, it looked normal: a Streamlit page with a guess box, Submit and New Game buttons, and a sidebar for difficulty. Once I started playing, the hints didn't make sense. The secret was 40, but guesses of 110 and 115 both told me to go higher, and then 120 told me to go lower, so the direction kept flipping instead of being consistently wrong. The game also accepted 110 even though Normal mode is supposed to be 1 to 100. After the game ended and revealed the secret, I clicked New Game and nothing happened. The game stayed stuck on the game-over screen.
 
 - What did the game look like the first time you ran it?
 - List at least two concrete bugs you noticed at the start  
